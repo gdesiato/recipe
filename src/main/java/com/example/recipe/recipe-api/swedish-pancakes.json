@@ -1,0 +1,45 @@
+{
+  "name":"Swedish Pancakes",
+  "minutesToMake":30,
+  "difficultyRating":3,
+  "ingredients":[
+    {
+      "name":"eggs",
+      "amount":"3"
+    },
+    {
+      "name":"milk",
+      "amount":"1 1/4 cups"
+    },
+    {
+      "name":"all-purpose flour",
+      "amount":"3/4 cup"
+    },
+    {
+      "name":"sugar",
+      "amount":"1 tbsp"
+    },
+    {
+      "name":"salt",
+      "amount":"1/2 tsp"
+    },
+    {
+      "name":"butter",
+      "amount":"1 tbsp, or as needed"
+    }
+  ],
+  "steps":[
+    {
+      "stepNumber":1,
+      "description":"Beat eggs in a bowl until thick and foamy, 3 to 5 minutes.  Stir in milk."
+    },
+    {
+      "stepNumber":2,
+      "description":"Mix flour, sugar, and salt together in a bowl, add to egg mixture."
+    },
+    {
+      "stepNumber":3,
+      "description":"Melt butter in pan over medium heat.  Pour batter, rotating pan to spread into thin layer.  Cook until light brown on bottom, flip and continue cooking until second side is light brown."
+    }
+  ]
+}
