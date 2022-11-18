@@ -1,5 +1,6 @@
 package com.example.recipe.models;
 
+import com.example.recipe.exceptions.RecipeIllegalStateException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,6 +44,9 @@ public class Recipe {
     @JoinColumn(name = "recipeId", nullable = false, foreignKey = @ForeignKey)
     private Collection<Review> reviews;
 
+    @Column(nullable = false)
+    private long averageReviewScore;
+
     @Transient
     @JsonIgnore
     private URI locationURI;
@@ -54,11 +58,11 @@ public class Recipe {
         this.difficultyRating = difficultyRating;
     }
 
-    public void validate() throws IllegalStateException {
+    public void validate() throws RecipeIllegalStateException {
         if (ingredients.size() == 0) {
-            throw new IllegalStateException("You have to have at least one ingredient for you recipe!");
+            throw new RecipeIllegalStateException("You have to have at least one ingredient for you recipe!");
         } else if (steps.size() == 0) {
-            throw new IllegalStateException("You have to include at least one step for your recipe!");
+            throw new RecipeIllegalStateException("You have to include at least one step for your recipe!");
         }
     }
 

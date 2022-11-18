@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 
 @RestController
@@ -25,6 +24,11 @@ public class RecipeController {
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/v2")
+    public Recipe createNewRecipeV2(@RequestBody Recipe recipe) {
+            return recipeService.createNewRecipe(recipe);
     }
 
     @GetMapping("/{id}")
@@ -49,7 +53,18 @@ public class RecipeController {
     @GetMapping("/search/{name}")
     public ResponseEntity<?> getRecipesByName(@PathVariable("name") String name) {
         try {
-            ArrayList<Recipe> matchingRecipes = recipeService.getRecipesByName(name);
+            Long rating = null;
+            ArrayList<Recipe> matchingRecipes = recipeService.getRecipesByName(name, rating);
+            return ResponseEntity.ok(matchingRecipes);
+        } catch (NoSuchRecipeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/search/{name}/rating/{minimum}")
+    public ResponseEntity<?> getRecipesByNameAndRating(@PathVariable("name") String name, @PathVariable("minimum") Long rating) {
+        try {
+            ArrayList<Recipe> matchingRecipes = recipeService.getRecipesByName(name, rating);
             return ResponseEntity.ok(matchingRecipes);
         } catch (NoSuchRecipeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

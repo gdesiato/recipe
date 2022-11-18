@@ -3,6 +3,7 @@ package com.example.recipe.services;
 
 import com.example.recipe.exceptions.NoSuchRecipeException;
 import com.example.recipe.models.Recipe;
+import com.example.recipe.models.Review;
 import com.example.recipe.repositories.RecipeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +34,33 @@ public class RecipeService {
         }
 
         Recipe recipe = recipeOptional.get();
+
+        if (!recipe.getReviews().isEmpty()) {
+            long ratingsSum = 0;
+            for (Review review : recipe.getReviews()) {
+                ratingsSum += review.getRating();
+            }
+            recipe.setAverageReviewScore(ratingsSum / recipe.getReviews().size());
+        }
+
         recipe.generateLocationURI();
         return recipe;
     }
 
-    public ArrayList<Recipe> getRecipesByName(String name) throws NoSuchRecipeException {
+    public ArrayList<Recipe> getRecipesByName(String name, Long rating) throws NoSuchRecipeException {
+        ArrayList<Recipe> matchingRecipes = recipeRepo.findByNameContaining(name);
+
+        if (matchingRecipes.isEmpty()) {
+            throw new NoSuchRecipeException("No recipes could be found with that name.");
+        }
+
+        for (Recipe r : matchingRecipes) {
+            r.generateLocationURI();
+        }
+        return matchingRecipes;
+    }
+
+    public ArrayList<Recipe> getRecipesByNameAndRating(String name, Long rating) throws NoSuchRecipeException {
         ArrayList<Recipe> matchingRecipes = recipeRepo.findByNameContaining(name);
 
         if (matchingRecipes.isEmpty()) {

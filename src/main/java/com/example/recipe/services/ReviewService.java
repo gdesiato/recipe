@@ -7,7 +7,6 @@ import com.example.recipe.models.Review;
 import com.example.recipe.repositories.ReviewRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -53,6 +52,13 @@ public class ReviewService {
     public Recipe postNewReview(Review review, Long recipeId) throws NoSuchRecipeException {
         Recipe recipe = recipeService.getRecipeById(recipeId);
         recipe.getReviews().add(review);
+
+//        long ratingsSum = 0;
+//        for (Review r : recipe.getReviews()) {
+//            ratingsSum += r.getRating();
+//        }
+//        recipe.setAverageReviewScore(ratingsSum / recipe.getReviews().size());
+
         recipeService.updateRecipe(recipe, false);
         return recipe;
     }
