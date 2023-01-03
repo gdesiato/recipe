@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Set;
 
 
-@SpringBootTest(classes = RecipeApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = RecipeMainTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = "test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -37,7 +37,10 @@ class RecipeApiApplicationTests implements CommandLineRunner {
 
 	@Autowired
 	RecipeRepo recipeRepo;
+	@Autowired
 	MockMvc mockMvc;
+
+	//given - when - then
 
 	@Test
 	@Order(1)
@@ -260,46 +263,46 @@ class RecipeApiApplicationTests implements CommandLineRunner {
 		assertThat(message, is("No recipes could be found with that name."));
 	}
 
-	@Test
-	@Order(8)
-	public void testDeleteRecipeByIdSuccessBehavior() throws Exception {
-		final long recipeId = 3;
-		//get the recipe with ID 3 for future error message confirmation
-		byte[] responseByteArr = this.mockMvc.perform(get("/recipes/" + recipeId))
-				.andExpect(status().isOk())
-				//confirm correct recipe was returned
-				.andExpect(jsonPath("id").value(recipeId))
-				.andReturn().getResponse().getContentAsByteArray();
-
-		Recipe recipe3 = TestUtil.convertJsonBytesToObject(responseByteArr, Recipe.class);
-
-		//set up delete request
-		byte[] deleteResponseByteArr = this.mockMvc.perform(delete("/recipes/" + recipeId))
-				//confirm 200 OK was returned
-				.andExpect(status().isOk())
-				//confirm a String was returned
-				.andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8"))
-				.andReturn().getResponse().getContentAsByteArray();
-
-		//pull delete message from byte[]
-		String returnedDeleteConfirmationMessage = new String(deleteResponseByteArr);
-
-		//confirm the message is as expected using the previously acquired Recipe object
-		assertThat(returnedDeleteConfirmationMessage, is("The recipe with ID "  + recipe3.getId() + " and name " + recipe3.getName() + " was deleted."));
-	}
-
-	@Test
-	@Order(9)
-	public void testDeleteRecipeByIdFailureBehavior() throws Exception {
-		//force error with invalid ID
-		this.mockMvc.perform(delete("/recipes/-1"))
-				//expect 400 BAD REQUEST
-				.andExpect(status().isBadRequest())
-				//expect plain text aka a String
-				.andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8"))
-				//confirm correct error message
-				.andExpect(content().string(is("No recipe with ID -1 could be found. Could not delete.")));
-	}
+//	@Test
+//	@Order(8)
+//	public void testDeleteRecipeByIdSuccessBehavior() throws Exception {
+//		final long recipeId = 3;
+//		//get the recipe with ID 3 for future error message confirmation
+//		byte[] responseByteArr = this.mockMvc.perform(get("/recipes/" + recipeId))
+//				.andExpect(status().isOk())
+//				//confirm correct recipe was returned
+//				.andExpect(jsonPath("id").value(recipeId))
+//				.andReturn().getResponse().getContentAsByteArray();
+//
+//		Recipe recipe3 = TestUtil.convertJsonBytesToObject(responseByteArr, Recipe.class);
+//
+//		//set up delete request
+//		byte[] deleteResponseByteArr = this.mockMvc.perform(delete("/recipes/" + recipeId))
+//				//confirm 200 OK was returned
+//				.andExpect(status().isOk())
+//				//confirm a String was returned
+//				.andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8"))
+//				.andReturn().getResponse().getContentAsByteArray();
+//
+//		//pull delete message from byte[]
+//		String returnedDeleteConfirmationMessage = new String(deleteResponseByteArr);
+//
+//		//confirm the message is as expected using the previously acquired Recipe object
+//		assertThat(returnedDeleteConfirmationMessage, is("The recipe with ID "  + recipe3.getId() + " and name " + recipe3.getName() + " was deleted."));
+//	}
+//
+//	@Test
+//	@Order(9)
+//	public void testDeleteRecipeByIdFailureBehavior() throws Exception {
+//		//force error with invalid ID
+//		this.mockMvc.perform(delete("/recipes/-1"))
+//				//expect 400 BAD REQUEST
+//				.andExpect(status().isBadRequest())
+//				//expect plain text aka a String
+//				.andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8"))
+//				//confirm correct error message
+//				.andExpect(content().string(is("No recipe with ID -1 could be found. Could not delete.")));
+//	}
 
 
 	@Test

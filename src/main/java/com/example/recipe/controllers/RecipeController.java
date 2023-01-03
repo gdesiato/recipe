@@ -1,6 +1,7 @@
 package com.example.recipe.controllers;
 
 import com.example.recipe.exceptions.NoSuchRecipeException;
+import com.example.recipe.exceptions.RecipeIllegalStateException;
 import com.example.recipe.models.Recipe;
 import com.example.recipe.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class RecipeController {
         try {
             Recipe insertedRecipe = recipeService.createNewRecipe(recipe);
             return ResponseEntity.created(insertedRecipe.getLocationURI()).body(insertedRecipe);
-        } catch (IllegalStateException e) {
+        } catch (RecipeIllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
