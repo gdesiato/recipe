@@ -53,27 +53,40 @@ public class ReviewService {
         Recipe recipe = recipeService.getRecipeById(recipeId);
         recipe.getReviews().add(review);
 
-//        long ratingsSum = 0;
-//        for (Review r : recipe.getReviews()) {
-//            ratingsSum += r.getRating();
-//        }
-//        recipe.setAverageReviewScore(ratingsSum / recipe.getReviews().size());
+        long ratingsSum = 0;
+        for (Review r : recipe.getReviews()) {
+            ratingsSum += r.getRating();
+        }
+        recipe.setAverageReviewScore(ratingsSum / recipe.getReviews().size());
 
         recipeService.updateRecipe(recipe, false);
         return recipe;
     }
 
-    public Review deleteReviewById(Long id) throws NoSuchReviewException {
+
+    // create bidirectional link between review and recipe (@OnetoMany / @@ManyToOne)
+
+    public Review deleteReviewById(Long id) throws NoSuchReviewException, NoSuchRecipeException {
         Review review = getReviewById(id);
 
         if (null == review) {
             throw new NoSuchReviewException("The review you are trying to delete does not exist.");
         }
         reviewRepo.deleteById(id);
+        Recipe recipe = recipeService.getRecipeById(review.getRecipeId());
+
+        long ratingsSum = 0;
+        for (Review r : recipe.getReviews()) {
+            ratingsSum += r.getRating();
+        }
+        recipe.setAverageReviewScore(ratingsSum / recipe.getReviews().size());
+
+        recipeService.updateRecipe(recipe, false);
+
         return review;
     }
 
-    public Review updateReviewById(Review reviewToUpdate) throws NoSuchReviewException {
+    public Review updateReviewById(Review reviewToUpdate) throws NoSuchReviewException, NoSuchRecipeException {
         try {
             Review review = getReviewById(reviewToUpdate.getId());
         } catch (NoSuchReviewException e) {
@@ -81,6 +94,17 @@ public class ReviewService {
                     "please double check the ID you passed in.");
         }
         reviewRepo.save(reviewToUpdate);
+        Review review = getReviewById(reviewToUpdate.getId());
+        Recipe recipe = recipeService.getRecipeById(review.getRecipeId());
+
+        long ratingsSum = 0;
+        for (Review r : recipe.getReviews()) {
+            ratingsSum += r.getRating();
+        }
+        recipe.setAverageReviewScore(ratingsSum / recipe.getReviews().size());
+
+        recipeService.updateRecipe(recipe, false);
+
         return reviewToUpdate;
     }
 }

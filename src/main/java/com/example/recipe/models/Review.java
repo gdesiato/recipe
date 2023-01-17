@@ -24,6 +24,12 @@ public class Review {
 
     private String description;
 
+//    @ManyToOne (cascade = CascadeType.ALL, optional = false)
+//    private Recipe recipe;
+
+    @Column(name = "recipeId")
+    private Long recipeId;
+
     public void setRating(int rating) {
         if (rating <= 0 || rating > 10) {
             throw new IllegalStateException("Rating must be between 0 and 10.");

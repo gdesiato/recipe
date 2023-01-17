@@ -5,12 +5,10 @@ import com.example.recipe.models.Recipe;
 import com.example.recipe.models.Review;
 import com.example.recipe.models.Step;
 import com.example.recipe.repositories.RecipeRepo;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
 import java.util.Set;
 
 @SpringBootApplication

@@ -62,7 +62,7 @@ public class ReviewController {
         try {
             Review review = reviewService.deleteReviewById(id);
             return ResponseEntity.ok(review);
-        } catch (NoSuchReviewException e) {
+        } catch (NoSuchReviewException | NoSuchRecipeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -72,7 +72,7 @@ public class ReviewController {
         try {
             Review review = reviewService.updateReviewById(reviewToUpdate);
             return ResponseEntity.ok(review);
-        } catch (NoSuchReviewException e) {
+        } catch (NoSuchReviewException | NoSuchRecipeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
