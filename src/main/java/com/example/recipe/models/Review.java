@@ -27,7 +27,7 @@ public class Review {
 //    @ManyToOne (cascade = CascadeType.ALL, optional = false)
 //    private Recipe recipe;
 
-    @Column(name = "recipeId")
+    @Column(name = "recipe_id", insertable = false, updatable = false)
     private Long recipeId;
 
     public void setRating(int rating) {
