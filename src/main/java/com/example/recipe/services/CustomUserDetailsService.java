@@ -1,10 +1,19 @@
 package com.example.recipe.services;
 
+import com.example.recipe.models.CustomUserDetails;
+import com.example.recipe.models.Role;
+import com.example.recipe.repositories.UserRepo;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.Collections;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
@@ -23,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(username + " is not a valid username! Check for typos and try again.");
         }
 
-        return optionalUser;
+        return (UserDetails) optionalUser;
     }
 
     @Transactional(readOnly = true)
