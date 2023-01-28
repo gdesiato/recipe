@@ -1,4 +1,4 @@
-package com.example.recipe;
+package com.example.recipe.config;
 
 import com.example.recipe.models.CustomUserDetails;
 import com.example.recipe.models.Recipe;
@@ -52,7 +52,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 }
 
                 //if the author of the entity matches the current user they are the owner of the recipe and should be allowed access
-                return recipe.get().getAuthor().equals(userDetails.getUsername());
+                return recipe.get().getAuthor().getId()==userDetails.getId();
 
             } else if (targetType.equalsIgnoreCase("review")) {
                 Optional<Review> review = reviewRepo.findById(Long.parseLong(targetId.toString()));

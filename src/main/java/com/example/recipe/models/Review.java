@@ -22,12 +22,16 @@ public class Review {
     @NotNull
     private int rating;
 
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey)
+    private CustomUserDetails author;
+
     private String description;
 
 //    @ManyToOne (cascade = CascadeType.ALL, optional = false)
 //    private Recipe recipe;
 
-    @Column(name = "recipe_id", insertable = false, updatable = false)
+    @Column(name = "recipeId", insertable = false, updatable = false)
     private Long recipeId;
 
     public void setRating(int rating) {

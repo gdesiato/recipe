@@ -7,6 +7,7 @@ import com.example.recipe.models.Review;
 import com.example.recipe.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
@@ -58,6 +59,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasPermission(#id, 'Review', 'delete')")
     public ResponseEntity<?> deleteReviewById(@PathVariable("id") Long id) {
         try {
             Review review = reviewService.deleteReviewById(id);
@@ -68,6 +70,7 @@ public class ReviewController {
     }
 
     @PatchMapping
+    @PreAuthorize("hasPermission(#reviewToUpdate.id, 'Review', 'edit')")
     public ResponseEntity<?> updateReviewById(@RequestBody Review reviewToUpdate) {
         try {
             Review review = reviewService.updateReviewById(reviewToUpdate);

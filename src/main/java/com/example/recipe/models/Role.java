@@ -2,8 +2,7 @@ package com.example.recipe.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.Entity;
-import org.springframework.data.annotation.Id;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 

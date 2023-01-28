@@ -3,7 +3,6 @@ package com.example.recipe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.annotations.CascadeType;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class CustomUserDetails implements UserDetails {
         this.userMeta = userMeta;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = javax.persistence.CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", nullable = false)
     private Collection<Role> authorities = new ArrayList<>();
 

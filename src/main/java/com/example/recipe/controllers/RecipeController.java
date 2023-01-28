@@ -7,6 +7,7 @@ import com.example.recipe.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
@@ -73,6 +74,7 @@ public class RecipeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasPermission(#id, 'Recipe', 'delete')")
     public ResponseEntity<?> deleteRecipeById(@PathVariable("id") Long id) {
         try {
             Recipe deletedRecipe = recipeService.deleteRecipeById(id);
@@ -84,6 +86,7 @@ public class RecipeController {
     }
 
     @PatchMapping
+    @PreAuthorize("hasPermission(#updatedRecipe.id, 'Recipe', 'edit')")
     public ResponseEntity<?> updateRecipe(@RequestBody Recipe updatedRecipe) {
         try {
             Recipe returnedUpdatedRecipe = recipeService.updateRecipe(updatedRecipe, true);

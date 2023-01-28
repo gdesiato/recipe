@@ -22,6 +22,7 @@ public class SecurityConfig {
                 //authorize all requests to access CSS and JavaScript
                 .authorizeRequests(auth -> auth
                         .antMatchers("/css", "/js").permitAll()
+                        .antMatchers("/users").permitAll()
                         //allow all requests to read recipes and reviews
                         .antMatchers(HttpMethod.GET, "/recipes/**", "/reviews").permitAll()
                         //allow creation of new recipes and reviews

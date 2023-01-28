@@ -32,6 +32,10 @@ public class Recipe {
     @Column(nullable = false)
     private Integer difficultyRating;
 
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey)
+    private CustomUserDetails author;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipeId", nullable = false, foreignKey = @ForeignKey)
     private Collection<Ingredient> ingredients = new ArrayList<>();
@@ -77,4 +81,5 @@ public class Recipe {
             //Exception should stop here.
         }
     }
+
 }
