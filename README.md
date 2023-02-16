@@ -1,3 +1,3 @@
-# SpringTest
+# Recipe
 
 DEMO RECIPE PROJECT
