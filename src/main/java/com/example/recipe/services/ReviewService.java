@@ -6,7 +6,11 @@ import com.example.recipe.models.Recipe;
 import com.example.recipe.models.Review;
 import com.example.recipe.repositories.ReviewRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -19,6 +23,7 @@ public class ReviewService {
     @Autowired
     RecipeService recipeService;
 
+    @Cacheable(value = "recipe", key = "#id")
     public Review getReviewById(Long id) throws NoSuchReviewException {
         Optional<Review> review = reviewRepo.findById(id);
 
@@ -39,6 +44,7 @@ public class ReviewService {
         return reviews;
     }
 
+
     public ArrayList<Review> getReviewByUsername(String username) throws NoSuchReviewException {
         ArrayList<Review> reviews = reviewRepo.findByUsername(username);
 
@@ -49,6 +55,8 @@ public class ReviewService {
         return reviews;
     }
 
+    @CacheEvict(value = "review", key = "#review.id")
+    @Transactional
     public Recipe postNewReview(Review review, Long recipeId) throws NoSuchRecipeException {
         Recipe recipe = recipeService.getRecipeById(recipeId);
         recipe.getReviews().add(review);
@@ -66,6 +74,8 @@ public class ReviewService {
 
     // create bidirectional link between review and recipe (@OnetoMany / @@ManyToOne)
 
+    @CacheEvict(value = "review", key = "#id")
+    @Transactional
     public Review deleteReviewById(Long id) throws NoSuchReviewException, NoSuchRecipeException {
         Review review = getReviewById(id);
 
@@ -86,6 +96,8 @@ public class ReviewService {
         return review;
     }
 
+    @CacheEvict(value = "review", key = "#review.id")
+    @Transactional
     public Review updateReviewById(Review reviewToUpdate) throws NoSuchReviewException, NoSuchRecipeException {
         try {
             Review review = getReviewById(reviewToUpdate.getId());

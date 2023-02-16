@@ -6,6 +6,9 @@ import com.example.recipe.models.Recipe;
 import com.example.recipe.models.Review;
 import com.example.recipe.repositories.RecipeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,14 +21,8 @@ public class RecipeService {
     @Autowired
     RecipeRepo recipeRepo;
 
-    @Transactional
-    public Recipe createNewRecipe(Recipe recipe) throws IllegalStateException {
-        recipe.validate();
-        recipe = recipeRepo.save(recipe);
-        recipe.generateLocationURI();
-        return recipe;
-    }
 
+    @Cacheable(value = "recipe", key = "#id")
     public Recipe getRecipeById(Long id) throws NoSuchRecipeException {
         Optional<Recipe> recipeOptional = recipeRepo.findById(id);
 
@@ -47,6 +44,7 @@ public class RecipeService {
         return recipe;
     }
 
+    @Cacheable(value = "recipes", key = "#name")
     public ArrayList<Recipe> getRecipesByName(String name, Long rating) throws NoSuchRecipeException {
         ArrayList<Recipe> matchingRecipes = recipeRepo.findByNameContaining(name);
 
@@ -60,6 +58,7 @@ public class RecipeService {
         return matchingRecipes;
     }
 
+    @Cacheable(value = "recipes", key = "#name.concat('-').concat(#rating)")
     public ArrayList<Recipe> getRecipesByNameAndRating(String name, Long rating) throws NoSuchRecipeException {
         ArrayList<Recipe> matchingRecipes = recipeRepo.findByNameContaining(name);
 
@@ -73,6 +72,7 @@ public class RecipeService {
         return matchingRecipes;
     }
 
+    @Cacheable(value = "recipes", key = "#name", sync = true)
     public ArrayList<Recipe> getAllRecipes() throws NoSuchRecipeException {
         ArrayList<Recipe> recipes = new ArrayList<>(recipeRepo.findAll());
 
@@ -82,6 +82,17 @@ public class RecipeService {
         return recipes;
     }
 
+
+    @CacheEvict(value = "recipe", key = "#recipe.id")
+    @Transactional
+    public Recipe createNewRecipe(Recipe recipe) throws IllegalStateException {
+        recipe.validate();
+        recipe = recipeRepo.save(recipe);
+        recipe.generateLocationURI();
+        return recipe;
+    }
+
+    @CacheEvict(value = "recipe", key = "#id")
     @Transactional
     public Recipe deleteRecipeById(Long id) throws NoSuchRecipeException {
         try {
@@ -93,6 +104,8 @@ public class RecipeService {
         }
     }
 
+
+    @CacheEvict(value = "recipe", key = "#recipe.id")
     @Transactional
     public Recipe updateRecipe(Recipe recipe, boolean forceIdCheck) throws NoSuchRecipeException {
         try {
